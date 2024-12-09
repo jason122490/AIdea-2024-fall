@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from timm.scheduler import CosineLRScheduler
 from tqdm import tqdm
+import wandb
 
 warnings.filterwarnings('ignore')
 
@@ -99,6 +100,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         return total_loss, total_mae
 
     def train(self, setting):
+        if self.args.wandb:
+            wandb.init(project='Tbrain', name=setting, config=self.args)
+
         train_data, train_loader = self._get_data(flag='train')
         vali_data, vali_loader = self._get_data(flag='val')
         
@@ -189,15 +193,21 @@ class Exp_Long_Term_Forecast(Exp_Basic):
             print("Epoch: {0}, Steps: {1} | Train Loss: {2:.7f} Vali Loss: {3:.7f} Vali MAE: {4:.7f}".format(
                 epoch + 1, train_steps, train_loss, vali_loss, vali_mae))
             
+            if self.args.wandb:
+                wandb.log({
+                    'Epoch': epoch + 1,
+                    'Learning Rate': model_optim.param_groups[0]['lr'],
+                    'Train Loss': train_loss,
+                    'Valid Loss': vali_loss,
+                    'Valid MAE' : vali_mae,
+                })
+            
             early_stopping(vali_mae, self.model, path)
             if early_stopping.early_stop:
                 print("Early stopping")
                 break
 
-            # adjust_learning_rate(model_optim, epoch + 1, self.args)
             scheduler.step(epoch + 1)
-
-            # get_cka(self.args, setting, self.model, train_loader, self.device, epoch)
 
         best_model_path = path + '/' + 'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
@@ -208,8 +218,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         pred_data, pred_loader = self._get_data(flag='pred')
         
         print('loading model')
-        # self.model.load_state_dict(torch.load(os.path.join('./checkpoints/' + setting, 'checkpoint.pth')))
-        self.model.load_state_dict(torch.load('/home/jason/Tbrain/checkpoints/Tbrain_4096_1_pythia-14m_32_16_True/checkpoint.pth'))
+        self.model.load_state_dict(torch.load(os.path.join('./checkpoints/' + setting, 'checkpoint.pth')))
 
         preds = []
         serials = []
