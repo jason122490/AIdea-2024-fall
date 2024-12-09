@@ -24,19 +24,19 @@ cd AIdea-2024-fall
 ### 1. Training
 Start training by running:
 ```
-./scripts/Tbrain/Tbrain_4096_1_pythia-14m_32_16_pretrained/LLM.sh
+./scripts/Tbrain/<training setting>/LLM.sh
 ```
 model weight and training log will be save in
 ```
-./checkpoints
-./logs
+./checkpoints/<training setting>/checkpoint.pth
+./logs/Tbrain/<training setting>.log
 ```
 ### 2. Predict
 Start predicting by running:
 ```
-./scripts/Tbrain/Tbrain_4096_1_pythia-14m_32_16_pretrained/LLM_pred.sh
+./scripts/Tbrain/<training setting>/LLM_pred.sh
 ```
-private and public's prediction will be save as:
+private and public's prediction will be save in:
 ```
-./results
+./results/<training setting>/results.csv
 ```
