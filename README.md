@@ -1,7 +1,7 @@
 # AIdea-2024-fall
 AI CUP 2024 秋季賽 根據區域微氣候資料預測發電量競賽
 ## Requirement
-+ OS: ubuntu 22.04
++ OS: Ubuntu 22.04
 + Nvidia GPU with CUDA version 12.2
 + Anaconda
 ## Environment Installation
