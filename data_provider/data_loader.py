@@ -243,11 +243,11 @@ class Dataset_Tbrain(Dataset):
                 start_position.append(0)
                 end_position.append(np.searchsorted(cumsum, self.seq_len) + 1)
             elif position + self.seq_len // 2 > cumsum[-1]:
-                start_position.append(np.searchsorted(cumsum, cumsum[-1] - self.seq_len) + 1)
+                start_position.append(np.searchsorted(cumsum, cumsum[-1] - self.seq_len + 1))
                 end_position.append(self.data.shape[0])
             else:
-                start_position.append(np.searchsorted(cumsum, position - self.seq_len // 2))
-                end_position.append(np.searchsorted(cumsum, position + self.seq_len // 2))
+                start_position.append(np.searchsorted(cumsum, position - self.seq_len // 2 + 1))
+                end_position.append(np.searchsorted(cumsum, position + self.seq_len // 2) + 1)
 
         self.start_position = np.array(start_position)
         self.end_position = np.array(end_position)
@@ -263,10 +263,6 @@ class Dataset_Tbrain(Dataset):
 
         seq_x = data[mask]
         seq_x_mark = stamp[mask, :-1]
-
-        # print(start_position, end_position)
-        # print(seq_x.shape)
-        # print(seq_x_mark.shape)
         
         seq_y = self.data[target_index : target_index + self.pred_len]
         seq_y_mark = self.data_stamp[target_index : target_index + self.pred_len, :-1]
