@@ -100,6 +100,7 @@ if __name__ == '__main__':
     
     parser.add_argument('--weight_decay', type=float, default=0.01, help='weight decay')
     parser.add_argument('--cached_dataset', action='store_true', default=False, help='cached dataset')
+    parser.add_argument('--wandb', action='store_true', default=False, help='use wandb')
 
     args = parser.parse_args()
     args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
