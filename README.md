@@ -13,7 +13,7 @@ conda activate AIdea
 Install required packages:
 ```
 pip install torch numpy pandas scikit-learn matplotlib reformer-pytorch
-pip install timm transformers tqdm
+pip install timm transformers tqdm wandb
 ```
 Download code:
 ```
